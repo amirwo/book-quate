@@ -18,7 +18,6 @@ import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
@@ -40,8 +39,9 @@ public class MainActivity extends Activity {
 
 		// Create file path
 		File path = new File(this.getFilesDir(), "quatenation/quateImages");
-		if (!path.exists())
+		if (!path.exists()) {
 			path.mkdirs();
+		}
 		File image = new File(path, "image.jpg");
 		Uri imageUri = FileProvider.getUriForFile(this, CAPTURE_IMAGE_FILE_PROVIDER, image);
 		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -107,20 +107,24 @@ public class MainActivity extends Activity {
 						path.mkdirs();
 					File imageFile = new File(path, "image.jpg");
 					Bitmap optimizedBitmap = processPhotoFromPath(imageFile.getAbsolutePath());
-					TextView textView = (TextView) findViewById(R.id.textView1);
-					textView.setText(getUTF8TextFromProcessedBitmap(optimizedBitmap));
+					String quoteContent = getUTF8TextFromProcessedBitmap(optimizedBitmap);
+					Intent quotePreview = new Intent(this, QuotePreviewActivity.class);
+					quotePreview.putExtra(Constants.KEY_QUOTE_CONTENT, quoteContent);
+					startActivity(quotePreview);
+					
+					
+//					TextView textView = (TextView) findViewById(R.id.textView1);
+//					textView.setText(getUTF8TextFromProcessedBitmap(optimizedBitmap));
 				}
 			}
 		}
 	}
 
-
-
 	public String getUTF8TextFromProcessedBitmap(Bitmap bmp) {
 		
 		Log.v(TAG, "Before baseApi");
 		final TessBaseAPI baseApi = new TessBaseAPI();
-		Log.v(TAG, "initialize baseApi");
+		Log.v(TAG, "Initialize baseApi");
 		baseApi.setDebug(true);
 		// getLang() returns equ in case of equations detection
 		baseApi.init(Constants.TESSBASE_PATH, Constants.DEFAULT_LANGUAGE);
@@ -132,48 +136,5 @@ public class MainActivity extends Activity {
 		Log.v(TAG, "Detected TEXT: " + recognizedText);
 		return recognizedText;
 	}
-
 	
-	// Unused&Removed Methods //
-	
-	// public static void saveToFile(Context context,Bitmap bmp, String name)
-	// throws IOException {
-	// String path = Environment.getExternalStorageDirectory().toString();
-	// OutputStream fOut = null;
-	// File file = new File(path, name + ".jpg"); // the File to save to
-	// fOut = new FileOutputStream(file);
-	//
-	// bmp.compress(Bitmap.CompressFormat.PNG, 100, fOut); // saving the Bitmap
-	// to a file compressed as a JPEG with 85% compression rate
-	// fOut.flush();
-	// fOut.close(); // do not forget to close the stream
-	//
-	// MediaStore.Images.Media.insertImage(context.getContentResolver(),file.getAbsolutePath(),file.getName(),file.getName());
-	// Log.d("MainActivity", "Saved to file bitmap");
-	// }
-
-	// public Bitmap toGrayscale(Bitmap bmpOriginal)
-	// {
-	// int width, height;
-	// height = bmpOriginal.getHeight();
-	// width = bmpOriginal.getWidth();
-	//
-	// Bitmap bmpGrayscale = Bitmap.createBitmap(width, height,
-	// Bitmap.Config.ARGB_8888);
-	// Canvas c = new Canvas(bmpGrayscale);
-	// Paint paint = new Paint();
-	// ColorMatrix cm = new ColorMatrix();
-	// cm.setSaturation(0);
-	// ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
-	// paint.setColorFilter(f);
-	// c.drawBitmap(bmpOriginal, 0, 0, paint);
-	// return bmpGrayscale;
-	// }
-
-//	public Uri getImageUri(Context inContext, Bitmap inImage) {
-//		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-//		inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-//		String path = Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-//		return Uri.parse(path);
-//	}
 }
