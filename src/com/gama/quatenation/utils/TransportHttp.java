@@ -23,8 +23,8 @@ public class TransportHttp {
 			throws Exception {
 		StringBuilder response = new StringBuilder();
 		TransportHttp.sendGet(context, fullUrl, request, response, MAX_RETRY_COUNT, 0);
-		T objecct = new Gson().fromJson(response.toString(), responseType);
-		return objecct;
+		T object = new Gson().fromJson(response.toString(), responseType);
+		return object;
 	}
 
 	private static void sendGet(Context context, String fullUrl, String request, StringBuilder sb, int maxRetryCount,

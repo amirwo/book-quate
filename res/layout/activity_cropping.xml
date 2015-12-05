@@ -1,0 +1,111 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:scrollbars="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        tools:context="com.gama.quatenation.CroppingActivity" >
+
+        <com.isseiaoki.simplecropview.CropImageView
+            xmlns:custom="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/cropImageView"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:padding="0dp"
+            custom:backgroundColor="@color/background_material_dark"
+            custom:cropMode="ratio_free"
+            custom:frameColor="@android:color/holo_green_light"
+            custom:frameStrokeWeight="3dp"
+            custom:guideColor="#BBFFFFFF"
+            custom:guideShowMode="show_on_touch"
+            custom:guideStrokeWeight="1dp"
+            custom:handleColor="@android:color/holo_green_light"
+            custom:handleShowMode="show_always"
+            custom:handleSize="10dp"
+            custom:touchPadding="4dp" />
+
+        <RadioGroup
+            android:id="@+id/radioCropMode"
+            android:layout_width="wrap_content"
+            android:textColor="@android:color/holo_green_light"
+            android:layout_height="wrap_content" >
+
+            <RadioButton
+                android:id="@+id/radio_RATIO_1_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/holo_green_light"
+                android:checked="true"
+                android:text="1:1" />
+
+            <RadioButton
+                android:id="@+id/radio_RATIO_4_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="4:3" />
+
+            <RadioButton
+                android:id="@+id/radio_RATIO_3_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="3:4" />
+
+            <RadioButton
+                android:id="@+id/radio_RATIO_16_9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="16:9" />
+
+            <RadioButton
+                android:id="@+id/radio_RATIO_9_16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="9:16" />
+
+            <RadioButton
+                android:id="@+id/radio_RATIO_FREE"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="free" />
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/crop_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cropImageView"
+            android:layout_gravity="center"
+            android:layout_margin="16dp"
+            android:text="Crop" />
+
+        <Button
+            android:id="@+id/ok_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/crop_button"
+            android:layout_gravity="center"
+            android:layout_margin="16dp"
+            android:layout_toEndOf="@+id/crop_button"
+            android:text="Quote!" />
+
+        <TextView
+            android:id="@+id/imageText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/crop_button" />
+    </RelativeLayout>
+
+</ScrollView>

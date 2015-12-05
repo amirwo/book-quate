@@ -10,7 +10,7 @@ public class Quote {
 
 	private VolumeInfo volumeInfo;
 
-	private String userId;
+	private String user;
 
 	public Quote() {
 		
@@ -48,17 +48,17 @@ public class Quote {
 		this.volumeInfo = volumeInfo;
 	}
 
-	public String getUserId() {
-		return userId;
+	public String getUser() {
+		return user;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setUser(String user) {
+		this.user = user;
 	}
 
 	@Override
 	public String toString() {
 		return "ClassPojo [tags = " + tags + ", content = " + content + ", id = " + id + ", volumeInfo = " + volumeInfo
-				+ ", userId = " + userId + "]";
+				+ ", userId = " + user + "]";
 	}
 }

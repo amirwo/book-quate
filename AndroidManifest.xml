@@ -12,7 +12,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="21"
         android:targetSdkVersion="21" />
 
     <application
@@ -30,6 +30,12 @@
                 android:resource="@xml/image_path" />
         </provider>
 
+        <receiver android:name=".ToastReceiver" >
+            <intent-filter>
+                <action android:name="com.unitedcoders.android.broadcasttest.SHOWTOAST" />
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" >
@@ -42,6 +48,27 @@
         <activity
             android:name=".QuotePreviewActivity"
             android:label="@string/title_activity_quote_preview" >
+            <intent-filter>
+                <action android:name="com.gama.quatenation.OnCompleteTessApiBroadcastListener" >
+                </action>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ArchiveActivity"
+            android:label="@string/title_activity_archive" >
+        </activity>
+        <activity
+            android:name=".PrivateActivity"
+            android:label="@string/title_activity_private" >
+        </activity>
+        <activity
+            android:name=".PublicActivity"
+            android:label="@string/title_activity_public" >
+        </activity>
+        <activity
+            android:screenOrientation="landscape"
+            android:name=".CroppingActivity"
+            android:label="@string/title_activity_croppiing" >
         </activity>
     </application>
 

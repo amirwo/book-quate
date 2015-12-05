@@ -11,8 +11,15 @@ public class Constants {
 	// QuotePreview 
 	public static final String KEY_QUOTE_CONTENT = "key_quote_content"; 
 	
-	
+	// Intents
+	public static final String ON_RECEIVE_RESPONSE_LISTENER_BR_INTENT = "com.gama.quatenation.OnReceiveResponseBroadcastListener";
+	public static final String ON_COMPLETE_TESS_API_BR_INTENT = "com.gama.quatenation.OnCompleteTessApiBroadcastListener";
 	// Network
 	public static final String GOOGLE_BOOK_API_GET = "https://www.googleapis.com/books/v1/volumes?";
 	public static final int SOCKET_TIMEOUT = 10000;
+	public static final String SERVICE_QUOTE_SEND_URL = "http://kwoht-1132.appspot.com/jinsert";
+	
+	// Error code
+	public static final int ERROR_CODE_UNKNOWN = 0;
+	public static final String ERROR_GETTING_ADVERTISING_ID = "unknown_advertising_id";
 }
