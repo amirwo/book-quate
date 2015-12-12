@@ -12,12 +12,15 @@ public class GetBookInfoService extends BaseService {
 	private static final String TAG = "GetBookInfoService";
 	
 	private long isbnNumber;
+	private String inTitle,inAuthor;
 	private RequestListener listener;
 	private BookInfoResponse response;
 
-	public GetBookInfoService(Context context, long isbnNumber, RequestListener listener) {
+	public GetBookInfoService(Context context, long isbnNumber, String inTitle, String inAuthor, RequestListener listener) {
 			super(context);
 			this.isbnNumber = isbnNumber;
+			this.inTitle = inTitle;
+			this.inAuthor = inAuthor;
 			this.listener = listener;
 		}
 
@@ -34,8 +37,10 @@ public class GetBookInfoService extends BaseService {
 
 	@Override
 	protected Object sendCommand() {
+		String queryStr = buildQueryStr();
+		Log.i(TAG, "queryStr!  " + queryStr);
 		try {
-			response = TransportHttp.transport(context, Constants.GOOGLE_BOOK_API_GET, "q=ISBN:" + isbnNumber, BookInfoResponse.class);
+			response = TransportHttp.transport(context, Constants.GOOGLE_BOOK_API_GET, queryStr, BookInfoResponse.class);
 		} catch (Exception e) {
 			Log.e(TAG, "Unable to handle send command!!!!", e);
 			errorMessage = e.getMessage();
@@ -43,6 +48,17 @@ public class GetBookInfoService extends BaseService {
 		}
 
 		return response;
+	}
+
+	private String buildQueryStr() {
+		String ret = "q=ISBN:";
+		if (isbnNumber > 0) {
+			ret += isbnNumber;
+		} else {
+			ret += inAuthor.isEmpty() ? "" : "+inauthor:" + inAuthor;
+			ret += inTitle.isEmpty() ? "" : "+intitle:" + inTitle;
+		}
+		return ret.replaceAll(" ", "%20");
 	}
 
 	@Override

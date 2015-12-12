@@ -5,7 +5,6 @@ import java.io.File;
 import com.gama.quatenation.utils.Constants;
 import com.googlecode.tesseract.android.TessBaseAPI;
 import com.isseiaoki.simplecropview.CropImageView;
-import com.isseiaoki.simplecropview.CropImageView.CropMode;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -18,8 +17,6 @@ import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.RadioGroup;
-import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
 public class CroppingActivity extends Activity {
@@ -28,7 +25,6 @@ public class CroppingActivity extends Activity {
 	private static final String CAPTURE_IMAGE_FILE_PROVIDER = "com.gama.quatenation.fileprovider";
 	private CropImageView cropImageView;
 	private TextView imageText;
-	private RadioGroup radioCropMode;
 	private static final int IMAGE_REQUEST_CODE = 1;
 	private File pathToPicture;
 	private boolean pictureTaken = false;
@@ -43,7 +39,6 @@ public class CroppingActivity extends Activity {
 			path.mkdirs();
 		}
 		pathToPicture = new File(path, "image.jpg");
-		
 		cropImageView = (CropImageView) findViewById(R.id.cropImageView);
 		cropImageView.setInitialFrameScale(1.0f);
 		imageText = (TextView) findViewById(R.id.imageText);
@@ -61,43 +56,31 @@ public class CroppingActivity extends Activity {
 		okButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				imageText.setText(getUTF8TextFromProcessedBitmap(processPhoto()));
+				Intent quotePreview = new Intent(getApplicationContext(), QuotePreviewActivity.class);
+				quotePreview.putExtra(Constants.KEY_QUOTE_CONTENT, getUTF8TextFromProcessedBitmap(processPhoto()));
+				startActivity(quotePreview);
+				
+//				imageText.setText(getUTF8TextFromProcessedBitmap(processPhoto()));
+			}
+		});
+
+		Button rotateButton = (Button) findViewById(R.id.rotate_button);
+		rotateButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				
+				cropImageView.rotateImage(CropImageView.RotateDegrees.ROTATE_90D);
+				setOrientation();
 			}
 		});
 		
-		radioCropMode = (RadioGroup) findViewById(R.id.radioCropMode);
-		radioCropMode.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			
-			@Override
-			public void onCheckedChanged(RadioGroup group, int checkedId) {
-				CropMode cropMode = CropMode.RATIO_FIT_IMAGE;
-				switch(checkedId) {
-					case R.id.radio_RATIO_1_1:
-						cropMode = CropMode.RATIO_1_1;
-						break;
-					case R.id.radio_RATIO_16_9:
-						cropMode = CropMode.RATIO_16_9;
-						break;
-					case R.id.radio_RATIO_3_4:
-						cropMode = CropMode.RATIO_3_4;
-						break;
-					case R.id.radio_RATIO_4_3:
-						cropMode = CropMode.RATIO_4_3;
-						break;
-					case R.id.radio_RATIO_9_16:
-						cropMode = CropMode.RATIO_9_16;
-						break;
-					case R.id.radio_RATIO_FREE:
-						cropMode = CropMode.RATIO_FREE;
-						break;
-				}
-				
-				cropImageView.setCropMode(cropMode);
-				cropImageView.setInitialFrameScale(1.0f);
-			}
-		});
+
 	}
 
+	private void setOrientation() {
+		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+	}
+	
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -152,4 +135,37 @@ public class CroppingActivity extends Activity {
 	}
 	
 
+	
+//	radioCropMode = (RadioGroup) findViewById(R.id.radioCropMode);
+//	radioCropMode.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+//		
+//		@Override
+//		public void onCheckedChanged(RadioGroup group, int checkedId) {
+//			CropMode cropMode = CropMode.RATIO_FIT_IMAGE;
+//			switch(checkedId) {
+//				case R.id.radio_RATIO_1_1:
+//					cropMode = CropMode.RATIO_1_1;
+//					break;
+//				case R.id.radio_RATIO_16_9:
+//					cropMode = CropMode.RATIO_16_9;
+//					break;
+//				case R.id.radio_RATIO_3_4:
+//					cropMode = CropMode.RATIO_3_4;
+//					break;
+//				case R.id.radio_RATIO_4_3:
+//					cropMode = CropMode.RATIO_4_3;
+//					break;
+//				case R.id.radio_RATIO_9_16:
+//					cropMode = CropMode.RATIO_9_16;
+//					break;
+//				case R.id.radio_RATIO_FREE:
+//					cropMode = CropMode.RATIO_FREE;
+//					break;
+//			}
+//			
+//			cropImageView.setCropMode(cropMode);
+//			cropImageView.setInitialFrameScale(1.0f);
+//		}
+//	});
+	
 }

@@ -1,5 +1,6 @@
 package com.gama.quatenation;
 
+import com.gama.quatenation.model.Book;
 import com.gama.quatenation.model.BookInfoResponse;
 import com.gama.quatenation.model.Quote;
 import com.gama.quatenation.model.VolumeInfo;
@@ -11,12 +12,10 @@ import com.gama.quatenation.utils.Constants;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
@@ -34,7 +33,7 @@ public class QuotePreviewActivity extends Activity {
 	private SharedPreferences sharedPref;
 	private SharedPreferences.Editor prefEditor;
 	
-	
+	private int choosenVolume = 0;
 	private CheckBox manualEditBox;
 	private EditText quoteEditText; 
 	private EditText isbnEditText;
@@ -116,7 +115,24 @@ public class QuotePreviewActivity extends Activity {
 //    }
     
 	public void updateBookInfoFields(BookInfoResponse bookInfoResponse) {
-		volumeInfo = bookInfoResponse.getItems()[0].getVolumeInfo();
+		CharSequence books[] = new CharSequence[bookInfoResponse.getItems().length];
+		int j = 0;
+		for (Book book : bookInfoResponse.getItems()) {
+			books[j++] = book.getVolumeInfo().getTitle() + " ," + book.getVolumeInfo().getAuthors()[0];
+		}
+		
+		
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Pick the currect book info");
+		builder.setItems(books, new DialogInterface.OnClickListener() {
+		    @Override
+		    public void onClick(DialogInterface dialog, int which) {
+		    	choosenVolume = which;
+		    }
+		});
+		builder.show();
+		
+		volumeInfo = bookInfoResponse.getItems()[choosenVolume].getVolumeInfo();
 		String authorsStr = "";
 		String[] authors = volumeInfo.getAuthors();
 		for (int i = 0; i < authors.length-1; i++) {
@@ -129,8 +145,8 @@ public class QuotePreviewActivity extends Activity {
 	}
 	
 	public void onUpdateButtonClicked(View v) {
-		Long isbnNum = Long.parseLong(isbnEditText.getText().toString());
-		new GetBookInfoService(this, isbnNum, isbnRequestListener).execute();
+//		Long isbnNum = Long.parseLong(isbnEditText.getText().toString());
+		new GetBookInfoService(this, -1, titleEditText.getText().toString(), authorEditText.getText().toString(), isbnRequestListener).execute();
 	}
 
 	@SuppressLint("NewApi")

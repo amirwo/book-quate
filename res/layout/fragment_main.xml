@@ -1,0 +1,31 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<!--         android:paddingTop="2dp" -->
+<!--         android:paddingBottom="2dp" -->
+<!--         android:background="@color/tab_background_color" -->
+    <HorizontalScrollView
+        android:id="@+id/scrlTabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+    	android:layout_alignParentBottom="true"    
+        android:scrollbars="none" >
+
+        <FrameLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/tab_background_color" />
+
+    </HorizontalScrollView>
+
+    <android.support.v4.view.ViewPager
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/scrlTabs" />
+
+</RelativeLayout>

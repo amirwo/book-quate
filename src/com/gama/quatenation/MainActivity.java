@@ -3,6 +3,7 @@ package com.gama.quatenation;
 import java.io.File;
 import java.io.IOException;
 
+import com.gama.quatenation.logic.PlacementsConfig;
 import com.gama.quatenation.utils.Constants;
 import com.googlecode.tesseract.android.TessBaseAPI;
 import com.isseiaoki.simplecropview.CropImageView;
@@ -19,13 +20,15 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity {
 
 	private final String TAG = "MainActivity";
 	protected static final String PHOTO_TAKEN = "photo_taken";
@@ -42,6 +45,12 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		PlacementsConfig.init();
+		setContentView(R.layout.activity_main);
+		if (savedInstanceState == null){
+			getSupportFragmentManager().beginTransaction().add(R.id.mainContent, new MainFragment()).commit();
+		}		
 		setContentView(R.layout.activity_main);
 		progress = new ProgressDialog(this);
 
