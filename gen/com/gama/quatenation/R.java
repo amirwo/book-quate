@@ -2680,7 +2680,6 @@ containing a value of this type.
         public static final int google_wallet_grayscale=0x7f090024;
         public static final int google_wallet_monochrome=0x7f090025;
         public static final int grayscale=0x7f090026;
-        public static final int gridview=0x7f09009c;
         public static final int holo_dark=0x7f090011;
         public static final int holo_light=0x7f090012;
         public static final int home=0x7f090001;
@@ -2698,6 +2697,7 @@ containing a value of this type.
         public static final int line3=0x7f0900a6;
         public static final int listMode=0x7f090029;
         public static final int list_item=0x7f090051;
+        public static final int llView=0x7f09009c;
         public static final int logo_only=0x7f090021;
         public static final int mainContent=0x7f09007b;
         public static final int mainLayout=0x7f090098;
@@ -2873,10 +2873,11 @@ containing a value of this type.
         public static final int notification_template_media=0x7f030028;
         public static final int notification_template_part_chronometer=0x7f030029;
         public static final int notification_template_part_time=0x7f03002a;
-        public static final int select_dialog_item_material=0x7f03002b;
-        public static final int select_dialog_multichoice_material=0x7f03002c;
-        public static final int select_dialog_singlechoice_material=0x7f03002d;
-        public static final int support_simple_spinner_dropdown_item=0x7f03002e;
+        public static final int quote_view_placeholders=0x7f03002b;
+        public static final int select_dialog_item_material=0x7f03002c;
+        public static final int select_dialog_multichoice_material=0x7f03002d;
+        public static final int select_dialog_singlechoice_material=0x7f03002e;
+        public static final int support_simple_spinner_dropdown_item=0x7f03002f;
     }
     public static final class menu {
         public static final int archive=0x7f0e0000;

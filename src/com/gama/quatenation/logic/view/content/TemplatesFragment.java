@@ -1,23 +1,18 @@
 package com.gama.quatenation.logic.view.content;
 
-import com.gama.quatenation.CroppingActivity;
 import com.gama.quatenation.R;
-import com.gama.quatenation.model.Placement;
-import com.gama.quatenation.model.Template;
+import com.gama.quatenation.model.Quote;
+import com.gama.quatenation.model.VolumeInfo;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 
 public class TemplatesFragment extends Fragment {
-	
-	
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -27,32 +22,40 @@ public class TemplatesFragment extends Fragment {
 				false);
 
 		if (getArguments() != null) {
-			final Placement placement = (Placement)getArguments().get("Placement");
+			Integer chosenActivity = (Integer) getArguments().get("Activity");
 
-			GridView gridview = (GridView) rootView.findViewById(R.id.gridview);
-			if (placement.getDisplayMode() == Placement.DISPLAY_MODE_GRID) {
-				gridview.setNumColumns(GridView.AUTO_FIT);
-			} else {
-				gridview.setNumColumns(1);
+			if (chosenActivity == 1) {
+				Quote q1 = new Quote();
+				q1.setContent("this is the first qquote");
+				String[] auth1 = new String[]{"author1"};
+				VolumeInfo volumeInfo = new VolumeInfo();
+				volumeInfo.setAuthors(auth1);
+				volumeInfo.setTitle("book title1");
+				q1.setVolumeInfo(volumeInfo);
+				LinearLayout ll = (LinearLayout) rootView.findViewById(R.id.llView);
+//				ListView listView = (ListView) rootView.findViewById(R.id.listView);
+				ll.addView(new QuoteView(this.getContext(), q1));
+				ll.addView(new QuoteView(this.getContext(), q1));
+				ll.addView(new QuoteView(this.getContext(), q1));
+				ll.addView(new QuoteView(this.getContext(), q1));
+				ll.addView(new QuoteView(this.getContext(), q1));
+				ll.addView(new QuoteView(this.getContext(), q1));
+				ll.addView(new QuoteView(this.getContext(), q1));
+				ll.addView(new QuoteView(this.getContext(), q1));
+				ll.addView(new QuoteView(this.getContext(), q1));
+				ll.addView(new QuoteView(this.getContext(), q1));
+				ll.addView(new QuoteView(this.getContext(), q1));
+				ll.addView(new QuoteView(this.getContext(), q1));
+				ll.addView(new QuoteView(this.getContext(), q1));
+				ll.addView(new QuoteView(this.getContext(), q1));
+				ll.addView(new QuoteView(this.getContext(), q1));
+				ll.addView(new QuoteView(this.getContext(), q1));
+				
+			} else if (chosenActivity == 0) {
+				
+				
+				
 			}
-			gridview.setAdapter(new TemplateAdapter(rootView.getContext(), placement));
-
-			gridview.setOnItemClickListener(new OnItemClickListener() {
-				public void onItemClick(AdapterView<?> parent, View v,
-						int position, long id) {
-					Template template = (Template)parent.getItemAtPosition(position);
-					
-					Intent intent = new Intent(getActivity(), CroppingActivity.class);
-					intent.putExtra("Template", template);
-					if (template.getPlacement() != null) {
-						intent.putExtra("Placement", template.getPlacement());
-					} else {
-						intent.putExtra("Placement", placement.getId());
-					}
-					getActivity().startActivity(intent);
-					
-				}
-			});
 		}
 
 		return rootView;

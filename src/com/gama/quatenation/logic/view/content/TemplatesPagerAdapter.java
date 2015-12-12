@@ -1,9 +1,5 @@
 package com.gama.quatenation.logic.view.content;
 
-import java.util.List;
-
-import com.gama.quatenation.model.Placement;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,11 +7,11 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 public class TemplatesPagerAdapter extends FragmentPagerAdapter {
 	
-	List<Placement> placements;
-
-	public TemplatesPagerAdapter(FragmentManager fm, List<Placement> placements) {
+	private int count; 
+	
+	public TemplatesPagerAdapter(FragmentManager fm, int count) {
 		super(fm);
-		this.placements = placements;
+		this.count = count;
 	}
 
 	@Override
@@ -23,7 +19,7 @@ public class TemplatesPagerAdapter extends FragmentPagerAdapter {
 		// Create here a fragement to each "acrivity" according to position
 		Fragment newFragment = new TemplatesFragment();
 		Bundle args = new Bundle();
-		args.putSerializable("Placement", placements.get(position));
+		args.putSerializable("Activity", position);
 		newFragment.setArguments(args);
 		
 		return newFragment;
@@ -31,7 +27,7 @@ public class TemplatesPagerAdapter extends FragmentPagerAdapter {
 
 	@Override
 	public int getCount() {
-		return placements.size();
+		return count;
 	}
 
 }

@@ -39,7 +39,7 @@ public class MainFragment extends Fragment{
 		
 		// Instantiate a ViewPager and a PagerAdapter.
         pager = (ViewPager) view.findViewById(R.id.pager);
-        pagerAdapter = new TemplatesPagerAdapter(getChildFragmentManager(), PlacementsConfig.getInstance().getPlacements());
+        pagerAdapter = new TemplatesPagerAdapter(getChildFragmentManager(), PlacementsConfig.getInstance().getPlacements().size());
         pager.setAdapter(pagerAdapter);
         pager.setOnPageChangeListener(new OnPageChangeListener() {
 			@Override

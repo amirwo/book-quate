@@ -608,7 +608,6 @@ int id google_wallet_classic 0x7f090023
 int id google_wallet_grayscale 0x7f090024
 int id google_wallet_monochrome 0x7f090025
 int id grayscale 0x7f090026
-int id gridview 0x7f09009c
 int id holo_dark 0x7f090011
 int id holo_light 0x7f090012
 int id home 0x7f090001
@@ -626,6 +625,7 @@ int id line1 0x7f0900a2
 int id line3 0x7f0900a6
 int id listMode 0x7f090029
 int id list_item 0x7f090051
+int id llView 0x7f09009c
 int id logo_only 0x7f090021
 int id mainContent 0x7f09007b
 int id mainLayout 0x7f090098
@@ -768,10 +768,11 @@ int layout notification_template_lines 0x7f030027
 int layout notification_template_media 0x7f030028
 int layout notification_template_part_chronometer 0x7f030029
 int layout notification_template_part_time 0x7f03002a
-int layout select_dialog_item_material 0x7f03002b
-int layout select_dialog_multichoice_material 0x7f03002c
-int layout select_dialog_singlechoice_material 0x7f03002d
-int layout support_simple_spinner_dropdown_item 0x7f03002e
+int layout quote_view_placeholders 0x7f03002b
+int layout select_dialog_item_material 0x7f03002c
+int layout select_dialog_multichoice_material 0x7f03002d
+int layout select_dialog_singlechoice_material 0x7f03002e
+int layout support_simple_spinner_dropdown_item 0x7f03002f
 int menu archive 0x7f0e0000
 int menu crop 0x7f0e0001
 int menu croppiing 0x7f0e0002
