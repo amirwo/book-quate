@@ -1,16 +1,18 @@
 package com.gama.quatenation;
 
-import com.gama.quatenation.logic.PlacementsConfig;
-import com.gama.quatenation.logic.view.content.TemplatesPagerAdapter;
+import com.gama.quatenation.logic.Configuration;
+import com.gama.quatenation.logic.view.content.ActivitiesPagerAdapter;
 import com.gama.quatenation.logic.view.tabs.TabsController;
 import com.gama.quatenation.logic.view.tabs.TabsFragment;
 import com.gama.quatenation.utils.Util;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,7 @@ import android.widget.HorizontalScrollView;
 
 public class MainFragment extends Fragment{
 	
+	private final static String TAG = "AMIRMainFragment";
 	/**
      * The pager widget, which handles animation and allows swiping horizontally to access previous
      * and next wizard steps.
@@ -39,12 +42,13 @@ public class MainFragment extends Fragment{
 		
 		// Instantiate a ViewPager and a PagerAdapter.
         pager = (ViewPager) view.findViewById(R.id.pager);
-        pagerAdapter = new TemplatesPagerAdapter(getChildFragmentManager(), PlacementsConfig.getInstance().getPlacements().size());
+        pagerAdapter = new ActivitiesPagerAdapter(getChildFragmentManager(), Configuration.getInstance().getPlacements().size());
         pager.setAdapter(pagerAdapter);
         pager.setOnPageChangeListener(new OnPageChangeListener() {
 			@Override
 			public void onPageSelected(int arg0) {
-				TabsController.getInstance().setCurrentTab(arg0, true);				
+				Log.v(TAG, "onPageSelected " + arg0);
+				TabsController.getInstance().setCurrentTab(arg0, false);				
 			}
 			
 			@Override
@@ -54,6 +58,7 @@ public class MainFragment extends Fragment{
 			@Override
 			public void onPageScrollStateChanged(int arg0) {
 			}
+			
 		});
         TabsController.getInstance().setViewPager((ViewPager) view.findViewById(R.id.pager));
         TabsController.getInstance().setScrollView((HorizontalScrollView)view.findViewById(R.id.scrlTabs));
@@ -74,6 +79,16 @@ public class MainFragment extends Fragment{
 	}
 	
 	public void setCurrentTab(int tab){
+		Log.v(TAG, "setCurrentTab");
 		pager.setCurrentItem(tab);
 	}
+	
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (pagerAdapter instanceof ActivitiesPagerAdapter) {
+			getChildFragmentManager().getFragments().get(0).onActivityResult(requestCode, resultCode, data);
+		}
+	}
+
 }

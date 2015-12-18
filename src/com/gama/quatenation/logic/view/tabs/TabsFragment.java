@@ -2,8 +2,7 @@ package com.gama.quatenation.logic.view.tabs;
 
 import java.util.List;
 
-import com.gama.quatenation.logic.PlacementsConfig;
-import com.gama.quatenation.model.Placement;
+import com.gama.quatenation.logic.Configuration;
 import com.gama.quatenation.utils.Util;
 
 import android.annotation.SuppressLint;
@@ -20,8 +19,6 @@ import android.widget.RelativeLayout;
 
 public class TabsFragment extends Fragment {
 	
-	private static List<Placement> placements = PlacementsConfig.getInstance().getPlacements();
-	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,17 +32,17 @@ public class TabsFragment extends Fragment {
     			ViewGroup.LayoutParams.MATCH_PARENT,
     			ViewGroup.LayoutParams.WRAP_CONTENT);
     	result.setLayoutParams(prms);
-    	result.setBackgroundColor(Color.rgb(204, 213, 165));
-		initTabs(result, placements);	
+    	result.setBackgroundColor(Configuration.getInstance().getSecondaryColor());
+		initTabs(result, Configuration.getInstance().getPlacements());	
         return result;
     }
     
     @SuppressLint("NewApi")
-	private void initTabs(final RelativeLayout result, List<Placement> placements) {
+	private void initTabs(final RelativeLayout result, List<TabPlacement> placements) {
 		ViewGroup view;
     	RelativeLayout.LayoutParams viewParams;
     	int id = 100;
-    	for (Placement placement : placements){
+    	for (TabPlacement placement : placements){
         	view = TabsController.getInstance().addTab(result.getContext(), placement);
         	viewParams = new RelativeLayout.LayoutParams(
         			RelativeLayout.LayoutParams.WRAP_CONTENT,

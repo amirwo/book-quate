@@ -3,11 +3,10 @@ package com.gama.quatenation.logic.view.tabs;
 import java.lang.ref.WeakReference;
 
 import com.gama.quatenation.R;
-import com.gama.quatenation.model.Placement;
+import com.gama.quatenation.logic.Configuration;
 import com.gama.quatenation.utils.Util;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,11 +22,11 @@ public class TabViewController {
 	private static final int ID_TEXT = 1002;
 	
 	public interface TabListener{
-		public void onTabSelected(Placement placement);
+		public void onTabSelected(TabPlacement placement);
 	}
 	
 	private ViewGroup view;
-	private Placement placement;
+	private TabPlacement placement;
 	private TabListener listener;
 	
 	private WeakReference<Context> refContext;
@@ -56,10 +55,8 @@ public class TabViewController {
 		TabsController.getInstance().inActiveAllTabs();
 		TextView text = (TextView)view.findViewById(ID_TEXT);		
 		ImageView image = (ImageView)view.findViewById(ID_IMAGE);
-		text.setTextColor(Color.rgb(242, 185, 101));
-//		text.setTextColor(getContext().getResources().getColor(R.color.logo_green));
+		text.setTextColor(Configuration.getInstance().getMainColor());
 		image.setImageBitmap(placement.getImageSelectedBitmap(getContext()));
-		
 		
 		TabListener listener = getListener();
 		if (listener != null){
@@ -67,11 +64,11 @@ public class TabViewController {
 		}
 	}	
 
-	public Placement getPlacement() {
+	public TabPlacement getPlacement() {
 		return placement;
 	}
 
-	private void setPlacement(Placement placement) {
+	private void setPlacement(TabPlacement placement) {
 		this.placement = placement;
 	}
 
@@ -96,7 +93,7 @@ public class TabViewController {
 
 	private TabViewController(){}
 	
-	public static TabViewController getController(Context context, final Placement placement, TabListener listener){
+	public static TabViewController getController(Context context, final TabPlacement placement, TabListener listener){
 		final TabViewController result = new TabViewController();
 		result.setPlacement(placement);
 		result.setListener(listener);

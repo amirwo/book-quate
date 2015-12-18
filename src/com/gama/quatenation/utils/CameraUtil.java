@@ -80,4 +80,13 @@ public class CameraUtil {
 		}
 		return bitmap.copy(Bitmap.Config.ARGB_8888, true);
 	}
+	
+	public static Bitmap rotateBitmap(Bitmap bmp) {
+		android.graphics.Matrix mtx = new android.graphics.Matrix();
+		mtx.preRotate(90);
+		int w = bmp.getWidth();
+		int h = bmp.getHeight();
+		return Bitmap.createBitmap(bmp, 0, 0, w, h, mtx, false);
+		
+	}
 }

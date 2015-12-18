@@ -3,14 +3,16 @@ package com.gama.quatenation.logic.view.tabs;
 import java.util.ArrayList;
 
 import com.gama.quatenation.logic.view.tabs.TabViewController.TabListener;
-import com.gama.quatenation.model.Placement;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 
 public class TabsController {
+	
+	private static String TAG = "AMIRTabsController";
 	
 	// ===== SINGLETON =========
 	// Private constructor prevents instantiation from other classes
@@ -37,7 +39,7 @@ public class TabsController {
 	private ViewPager viewPager;
 	private HorizontalScrollView scrollView;
 	
-	public ViewGroup addTab(Context context, Placement placement){
+	public ViewGroup addTab(Context context, TabPlacement placement){
 		// Check exists
 		ViewGroup vg;
 		for (TabViewController tab : tabs){
@@ -55,7 +57,7 @@ public class TabsController {
 		TabViewController result = TabViewController.getController(context, placement, new TabListener() {
 			
 			@Override
-			public void onTabSelected(Placement placement) {
+			public void onTabSelected(TabPlacement placement) {
 			}
 		});
 		tabs.add(result);
@@ -78,6 +80,8 @@ public class TabsController {
 	}
 	
 	public synchronized void setCurrentTab(int tab, boolean animate){
+		Log.v(TAG, "scrolling to tab: " + tab);
+		Log.v(TAG, "currentTab = " + currentTab + " total size = " + getSize());
 		HorizontalScrollView scrollView = getScrollView();
 		if (scrollView != null){
 			int scrollTo = (tab * (scrollView.getChildAt(0).getWidth() - scrollView.getWidth())) / (getSize() - 1);

@@ -3,8 +3,8 @@ package com.gama.quatenation;
 import java.io.File;
 
 import com.gama.quatenation.utils.Constants;
+import com.gama.quatenation.utils.ui.CropImageView;
 import com.googlecode.tesseract.android.TessBaseAPI;
-import com.isseiaoki.simplecropview.CropImageView;
 
 import android.app.Activity;
 import android.content.Intent;

@@ -1,39 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" xmlns:app="http://schemas.android.com/apk/res/com.gama.quatenation">
 
-    <LinearLayout
-        android:id="@+id/llView"
+    <RelativeLayout
+        android:id="@+id/mainRelativeLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:horizontalSpacing="8dp"
-        android:padding="8dp"
-        android:verticalSpacing="8dp" >
-    </LinearLayout>
+        android:layout_height="match_parent" >
 
-<!--     <ListView -->
-<!--         android:id="@+id/listView" -->
-<!--         android:layout_width="match_parent" -->
-<!--         android:layout_height="match_parent" -->
-<!--         android:gravity="center" -->
-<!--         android:horizontalSpacing="8dp" -->
-<!--         android:padding="8dp" -->
-<!--         android:verticalSpacing="8dp" > -->
-<!--     </ListView> -->
+        <LinearLayout
+            android:id="@+id/llView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:horizontalSpacing="8dp"
+            android:orientation="vertical"
+            android:padding="8dp"
+            android:verticalSpacing="8dp" >
+        </LinearLayout>
 
-    <!-- <GridView -->
-    <!-- android:id="@+id/gridview" -->
-    <!-- android:layout_width="match_parent" -->
-    <!-- android:layout_height="match_parent" -->
-    <!-- android:gravity="center" -->
-    <!-- android:horizontalSpacing="8dp" -->
-    <!-- android:padding="8dp" -->
-    <!-- android:scrollbars="none" -->
-    <!-- android:stretchMode="columnWidth" -->
-    <!-- android:verticalSpacing="8dp" /> -->
+        <RelativeLayout
+            android:id="@+id/croppingRelativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:visibility="gone" >
 
-</RelativeLayout>
+            <com.gama.quatenation.utils.ui.CropImageView
+                xmlns:custom="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/cropImageView"
+                android:layout_width="match_parent"
+                android:layout_height="350dp"
+                android:padding="0dp"
+                custom:backgroundColor="@color/background_material_dark"
+                custom:cropMode="ratio_free"
+                app:initialFrameScale="1"
+                custom:frameColor="@android:color/holo_green_light"
+                custom:frameStrokeWeight="3dp"
+                custom:guideColor="#BBFFFFFF"
+                custom:guideShowMode="show_on_touch"
+                custom:guideStrokeWeight="1dp"
+                custom:handleColor="@android:color/holo_green_light"
+                custom:handleShowMode="show_always"
+                custom:handleSize="10dp"
+                custom:touchPadding="8dp" />
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+</ScrollView>

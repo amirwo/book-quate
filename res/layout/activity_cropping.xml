@@ -14,7 +14,7 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         tools:context="com.gama.quatenation.CroppingActivity" >
 
-        <com.isseiaoki.simplecropview.CropImageView
+        <com.gama.quatenation.utils.ui.CropImageView
             xmlns:custom="http://schemas.android.com/apk/res-auto"
             android:id="@+id/cropImageView"
             android:layout_width="match_parent"
@@ -31,62 +31,6 @@
             custom:handleShowMode="show_always"
             custom:handleSize="10dp"
             custom:touchPadding="8dp" />
-
-        <!-- <RadioGroup -->
-        <!-- android:id="@+id/radioCropMode" -->
-        <!-- android:layout_width="wrap_content" -->
-        <!-- android:textColor="@android:color/holo_green_light" -->
-        <!-- android:layout_height="wrap_content" > -->
-
-
-        <!-- <RadioButton -->
-        <!-- android:id="@+id/radio_RATIO_1_1" -->
-        <!-- android:layout_width="wrap_content" -->
-        <!-- android:layout_height="wrap_content" -->
-        <!-- android:textColor="@android:color/holo_green_light" -->
-        <!-- android:checked="true" -->
-        <!-- android:text="1:1" /> -->
-
-
-        <!-- <RadioButton -->
-        <!-- android:id="@+id/radio_RATIO_4_3" -->
-        <!-- android:layout_width="wrap_content" -->
-        <!-- android:layout_height="wrap_content" -->
-        <!-- android:checked="true" -->
-        <!-- android:text="4:3" /> -->
-
-
-        <!-- <RadioButton -->
-        <!-- android:id="@+id/radio_RATIO_3_4" -->
-        <!-- android:layout_width="wrap_content" -->
-        <!-- android:layout_height="wrap_content" -->
-        <!-- android:checked="true" -->
-        <!-- android:text="3:4" /> -->
-
-
-        <!-- <RadioButton -->
-        <!-- android:id="@+id/radio_RATIO_16_9" -->
-        <!-- android:layout_width="wrap_content" -->
-        <!-- android:layout_height="wrap_content" -->
-        <!-- android:checked="true" -->
-        <!-- android:text="16:9" /> -->
-
-
-        <!-- <RadioButton -->
-        <!-- android:id="@+id/radio_RATIO_9_16" -->
-        <!-- android:layout_width="wrap_content" -->
-        <!-- android:layout_height="wrap_content" -->
-        <!-- android:checked="true" -->
-        <!-- android:text="9:16" /> -->
-
-
-        <!-- <RadioButton -->
-        <!-- android:id="@+id/radio_RATIO_FREE" -->
-        <!-- android:layout_width="wrap_content" -->
-        <!-- android:layout_height="wrap_content" -->
-        <!-- android:checked="true" -->
-        <!-- android:text="free" /> -->
-        <!-- </RadioGroup> -->
 
         <Button
             android:id="@+id/rotate_button"

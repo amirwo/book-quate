@@ -1,32 +1,28 @@
 package com.gama.quatenation;
 
-import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.gama.quatenation.logic.PlacementsConfig;
+import com.gama.quatenation.logic.Configuration;
+import com.gama.quatenation.model.book.Quote;
+import com.gama.quatenation.utils.AdvertisingIdFactory;
 import com.gama.quatenation.utils.Constants;
+import com.gama.quatenation.utils.Util;
 import com.googlecode.tesseract.android.TessBaseAPI;
-import com.isseiaoki.simplecropview.CropImageView;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.ImageView;
 
 public class MainActivity extends FragmentActivity {
 
@@ -46,19 +42,33 @@ public class MainActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		PlacementsConfig.init();
+		Configuration.init();
+		setUserAdvertisingId();
+		List<Quote> savedQuotes = Util.getSavedQuotes("QUOTESLIST", getApplicationContext().getSharedPreferences("QUOTE_SHARED_PREFS", Context.MODE_PRIVATE));
+		if (savedQuotes == null) {
+			savedQuotes = new ArrayList<Quote>();
+		}
+		Configuration.getInstance().setUserQuoteList(savedQuotes);
+		Log.v(TAG, "advId: " + Configuration.getInstance().getUserAdvertisingId());
 		setContentView(R.layout.activity_main);
 		if (savedInstanceState == null){
 			getSupportFragmentManager().beginTransaction().add(R.id.mainContent, new MainFragment()).commit();
 		}		
 		setContentView(R.layout.activity_main);
 		progress = new ProgressDialog(this);
-
+		
 	}
 
-	public void btnViewArchiveClicked(View v) {
-		Intent intent = new Intent(this,ArchiveActivity.class);
-		startActivity(intent);
+	private void setUserAdvertisingId() {
+		Runnable r = new Runnable() {
+			
+			@Override
+			public void run() {
+				Configuration.getInstance().setUserAdvertisingId(AdvertisingIdFactory.getAdvertisingId(getApplicationContext()).getId());
+				
+			}
+		};
+		new Thread(r).start();
 	}
 	
 	public void btnCaptureQuateClicked(View v) {
@@ -127,49 +137,6 @@ public class MainActivity extends FragmentActivity {
 		return bitmap;
 	}
 
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch (requestCode) {
-		case IMAGE_CROPPING_CODE:
-			Intent intent = new Intent(this,CroppingActivity.class);
-			startActivityForResult(intent, IMAGE_REQUEST_CODE);
-		case IMAGE_REQUEST_CODE:
-			if (requestCode == IMAGE_REQUEST_CODE) {
-				if (resultCode == Activity.RESULT_OK) {
-					
-					// Verify path exists
-					File path = new File(getFilesDir(), "quatenation/quateImages");
-					if (!path.exists())
-						path.mkdirs();
-					File imageFile = new File(path, "image.jpg");
-					Bitmap optimizedBitmap = processPhotoFromPath(imageFile.getAbsolutePath());
-//					new BitmapToStringService(this, new TessBaseAPI(), optimizedBitmap).execute();
-					bmp = optimizedBitmap;
-//					getUTF8TextFromProcessedBitmap(optimizedBitmap);
-					// TODO: clear files + dir
-					
-					Log.v(TAG, "Before baseApi");
-					final TessBaseAPI baseApi = new TessBaseAPI();
-					Log.v(TAG, "Initialize baseApi");
-//					baseApi.setDebug(true);
-					// getLang() returns equ in case of equations detection
-					baseApi.init(Constants.TESSBASE_PATH, Constants.DEFAULT_LANGUAGE);
-					Log.v(TAG, "init baseApi done");
-					baseApi.setImage(bmp);
-					recognizedText = baseApi.getUTF8Text();
-					baseApi.end();
-//					bmp.recycle();
-					Log.v(TAG, recognizedText);
-					
-//		            return recognizedText;
-//					ConvertImageToTextAsync async = new ConvertImageToTextAsync();
-//					async.execute("");
-
-					
-				}
-			}
-		}
-	}
-
 	
 	public String getUTF8TextFromProcessedBitmap(Bitmap bmp) {
 		Log.v(TAG, "Before baseApi");
@@ -187,129 +154,4 @@ public class MainActivity extends FragmentActivity {
 		return recognizedText;
 	}
 	
-	
-	 private class ConvertImageToTextAsync extends AsyncTask<String, Void, String> {
-
-	        @Override
-	        protected String doInBackground(String... params) {
-				Log.v(TAG, "Before baseApi");
-				final TessBaseAPI baseApi = new TessBaseAPI();
-				Log.v(TAG, "Initialize baseApi");
-//				baseApi.setDebug(true);
-				// getLang() returns equ in case of equations detection
-				baseApi.init(Constants.TESSBASE_PATH, Constants.DEFAULT_LANGUAGE);
-				Log.v(TAG, "init baseApi done");
-				baseApi.setImage(bmp);
-				recognizedText = baseApi.getUTF8Text();
-				baseApi.end();
-				bmp.recycle();
-//				Log.v(TAG, "Detected TEXT: " + recognizedText);
-				
-	            return recognizedText;
-	        }
-
-	        @Override
-	        protected void onPostExecute(String result) {
-	        	progress.dismiss();
-				Intent quotePreview = new Intent(getApplicationContext(), QuotePreviewActivity.class);
-				quotePreview.putExtra(Constants.KEY_QUOTE_CONTENT, recognizedText);
-				startActivity(quotePreview);
-	        	
-	        }
-
-	        @Override
-	        protected void onPreExecute() {
-	    		progress.setTitle("Processing");
-	    		progress.setMessage("Converting image to text...");
-	    		progress.show();
-	        }
-
-	        @Override
-	        protected void onProgressUpdate(Void... values) {}
-	    }
-
-	 
-//	 public static Image Rescale(Image image, int dpiX, int dpiY)
-//	 {
-//	     Bitmap bm = new Bitmap((int)(image.Width * dpiX / image.HorizontalResolution), (int)(image.Height * dpiY / image.VerticalResolution));
-//	     bm.SetResolution(dpiX, dpiY);
-//	     Graphics g = Graphics.FromImage(bm);
-//	     g.InterpolationMode = InterpolationMode.Bicubic;
-//	     g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-//	     g.DrawImage(image, 0, 0);
-//	     g.Dispose();
-//
-//	     return bm;
-//	 }
-	 
-//	 protected void ocr() {
-//		 
-//	        BitmapFactory.Options options = new BitmapFactory.Options();
-//	        options.inSampleSize = 2;
-//	        Bitmap bitmap = BitmapFactory.decodeFile(IMAGE_PATH, options);
-//	 
-//	        try {
-//	            ExifInterface exif = new ExifInterface(IMAGE_PATH);
-//	            int exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-//	 
-//	            Log.v(LOG_TAG, "Orient: " + exifOrientation);
-//	 
-//	            int rotate = 0;
-//	            switch (exifOrientation) {
-//	                case ExifInterface.ORIENTATION_ROTATE_90:
-//	                    rotate = 90;
-//	                    break;
-//	                case ExifInterface.ORIENTATION_ROTATE_180:
-//	                    rotate = 180;
-//	                    break;
-//	                case ExifInterface.ORIENTATION_ROTATE_270:
-//	                    rotate = 270;
-//	                    break;
-//	            }
-//	 
-//	            Log.v(LOG_TAG, "Rotation: " + rotate);
-//	 
-//	            if (rotate != 0) {
-//	 
-//	                // Getting width & height of the given image.
-//	                int w = bitmap.getWidth();
-//	                int h = bitmap.getHeight();
-//	 
-//	                // Setting pre rotate
-//	                Matrix mtx = new Matrix();
-//	                mtx.preRotate(rotate);
-//	 
-//	                // Rotating Bitmap
-//	                bitmap = Bitmap.createBitmap(bitmap, 0, 0, w, h, mtx, false);
-//	                // tesseract req. ARGB_8888
-//	                bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
-//	            }
-//	 
-//	        } catch (IOException e) {
-//	            Log.e(LOG_TAG, "Rotate or coversion failed: " + e.toString());
-//	        }
-//	 
-//	        ImageView iv = (ImageView) findViewById(Page on r.id.image);
-//	        iv.setImageBitmap(bitmap);
-//	        iv.setVisibility(View.VISIBLE);
-//	 
-//	        Log.v(LOG_TAG, "Before baseApi");
-//	 
-//	        TessBaseAPI baseApi = new TessBaseAPI();
-//	        baseApi.setDebug(true);
-//	        baseApi.init(DATA_PATH, LANG);
-//	        baseApi.setImage(bitmap);
-//	        String recognizedText = baseApi.getUTF8Text();
-//	        baseApi.end();
-//	 
-//	        Log.v(LOG_TAG, "OCR Result: " + recognizedText);
-//	 
-//	        // clean up and show
-//	        if (LANG.equalsIgnoreCase("eng")) {
-//	            recognizedText = recognizedText.replaceAll("[^a-zA-Z0-9]+", " ");
-//	        }
-//	        if (recognizedText.length() != 0) {
-//	            ((TextView) findViewById(Page on r.id.field)).setText(recognizedText.trim());
-//	        }
-//	    }
 }
