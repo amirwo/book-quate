@@ -12,7 +12,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-sdk
-        android:minSdkVersion="21"
+        android:minSdkVersion="15"
         android:targetSdkVersion="21" />
 
     <application
@@ -68,6 +68,10 @@
         <activity
             android:name=".CroppingActivity"
             android:label="@string/title_activity_croppiing" >
+        </activity>
+        <activity
+            android:name=".QuoteViewActivity"
+            android:label="@string/title_activity_quote_view" >
         </activity>
     </application>
 

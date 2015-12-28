@@ -1,22 +1,33 @@
 
 package com.gama.quatenation.logic;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.gama.quatenation.logic.view.tabs.TabPlacement;
-import com.gama.quatenation.model.book.Quote;
+import com.gama.quatenation.model.quote.Quote;
+import com.gama.quatenation.utils.Util;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 
 public class Configuration {
+	
+	private static final String TAG = "Configuration";
+	private String packageName = "com.gama.quatenation";
+	private String dataPath;
+	
     private boolean initialized;
     private List<TabPlacement> placements;
     private String userAdvertisingId;
     private int secondaryColor = Color.rgb(204, 213, 165);
     private int mainColor	   = Color.rgb(242, 185, 101);
     private List<Quote> userQuoteList;
-    private boolean initCroppingActivity = false;
+    private String[] ocrLanguages = new String[]{"eng", "heb"};
+    private String selectedLanguage = "eng";
+    private File pathToPicture;
 
     // ===== SINGLETON =========
     // Private constructor prevents instantiation from other classes
@@ -44,9 +55,9 @@ public class Configuration {
             this.initialized = true;
         }
     }
-
+    
     public synchronized List<TabPlacement> getPlacements() {
-        if (!initialized) {
+        if (!isInitialized()) {
             // TODO: log
             return null;
         }
@@ -62,6 +73,44 @@ public class Configuration {
         return placements;
     }
 
+	public void initTesseractTrainData(Context context, String lang, boolean hasCubeData) {
+		String[] paths = new String[] { dataPath, dataPath + "tessdata/" };
+
+		for (String path : paths) {
+			File dir = new File(path);
+			if (!dir.exists()) {
+				if (!dir.mkdirs()) {
+					Log.e(TAG, "ERROR: Creation of directory " + path + " on internal storage failed");
+					return;
+				} else {
+					Log.v(TAG, "Created directory " + path + " on internal storage");
+				}
+			}
+
+		}
+		
+		Util.createFileFromAssets(context, "tessdata/" + lang + ".traineddata");
+		
+		if (hasCubeData) {
+			String[] cubeFileNames = new String[] { "cube.bigrams", "cube.fold" , "cube.lm", "cube.nn", "cube.params",
+					"cube.size", "cube.word-freq", "tesseract_cube.nn"};
+			
+			for (String path: cubeFileNames) {
+				Util.createFileFromAssets(context, "tessdata/" + lang + "." + path);
+			}
+		}
+		
+	}
+
+	public void setPictureFile(Context context) {
+		// Create file path
+		File path = new File(context.getFilesDir(), "photos/");
+		if (!path.exists()) {
+			path.mkdirs();
+		}
+		pathToPicture = new File(path, "image.jpg");
+	}
+	
 	public String getUserAdvertisingId() {
 		return userAdvertisingId;
 	}
@@ -94,14 +143,45 @@ public class Configuration {
 		this.userQuoteList = userQuoteList;
 	}
 
-	public boolean isInitCroppingActivity() {
-		return initCroppingActivity;
+	public String getDataPath() {
+		return dataPath;
 	}
 
-	public void setInitCroppingActivity(boolean initCroppingActivity) {
-		this.initCroppingActivity = initCroppingActivity;
+	public void setDataPath(String dataPath) {
+		this.dataPath = dataPath;
 	}
-    
+
+	public String getPackageName() {
+		return packageName;
+	}
+
+	public void setPackageName(String packageName) {
+		this.packageName = packageName;
+	}
+
+	public boolean isInitialized() {
+		return initialized;
+	}
+
+	public String getSelectedLanguage() {
+		return selectedLanguage;
+	}
+
+	public void setSelectedLanguage(String selectedLanguage) {
+		this.selectedLanguage = selectedLanguage;
+	}
+
+	public String[] getOcrLanguages() {
+		return ocrLanguages;
+	}
+
+	public void setOcrLanguages(String[] ocrLanguages) {
+		this.ocrLanguages = ocrLanguages;
+	}
+
+	public File getPathToPicture() {
+		return pathToPicture;
+	}
 
 
 }

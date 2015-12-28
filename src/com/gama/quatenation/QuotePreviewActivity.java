@@ -4,22 +4,21 @@ import com.gama.quatenation.logic.Configuration;
 import com.gama.quatenation.model.book.Book;
 import com.gama.quatenation.model.book.BookInfoResponse;
 import com.gama.quatenation.model.book.IndustryIdentifiers;
-import com.gama.quatenation.model.book.Quote;
 import com.gama.quatenation.model.book.VolumeInfo;
+import com.gama.quatenation.model.quote.Quote;
+import com.gama.quatenation.model.quote.QuoteRequest;
+import com.gama.quatenation.model.quote.QuotesResponse;
 import com.gama.quatenation.services.GetBookInfoService;
+import com.gama.quatenation.services.GetQuotesService;
 import com.gama.quatenation.services.RequestListener;
 import com.gama.quatenation.services.SendQuoteService;
-import com.gama.quatenation.utils.AdvertisingIdFactory;
 import com.gama.quatenation.utils.Constants;
 import com.gama.quatenation.utils.ui.QustomDialogBuilder;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
@@ -53,6 +52,7 @@ public class QuotePreviewActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_quote_preview);
 		Bundle extras = getIntent().getExtras();
+
 		String quoteContent = extras.getString(Constants.KEY_QUOTE_CONTENT, "Empty quote");
 		isbnEditText = (EditText) findViewById(R.id.isbn_edit_text);
 		quoteEditText = (EditText) findViewById(R.id.quote_content_text);
@@ -61,9 +61,9 @@ public class QuotePreviewActivity extends Activity {
 		pageEditText = (EditText) findViewById(R.id.page_edit_text);
 		pageEditText.setText("");
 		quoteEditText.setText(quoteContent);
-
 		isbnTable = (TableLayout) findViewById(R.id.tableLayout1);
 		manualEditBox = (CheckBox) findViewById(R.id.checkbox_edit_manualy);
+		
 		manualEditBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 			@Override
@@ -101,21 +101,19 @@ public class QuotePreviewActivity extends Activity {
 
 	}
 
-
-
 	public void updateBookInfoFields(final BookInfoResponse bookInfoResponse) {
 		boolean foundMatch = false;
 		CharSequence books[] = new CharSequence[bookInfoResponse.getItems().length];
 		int j = 0;
 		for (Book book : bookInfoResponse.getItems()) {
 			String title = book.getVolumeInfo().getTitle();
-			String[] authors =  book.getVolumeInfo().getAuthors();
+			String[] authors = book.getVolumeInfo().getAuthors();
 			String authorsStr = "";
 			for (int i = 0; i < authors.length - 1; i++) {
 				authorsStr += authors[i] + ",";
 			}
 			authorsStr += authors[authors.length - 1];
-			
+
 			if (title.equals(titleEditText.getText().toString())
 					&& authorsStr.equals(authorEditText.getText().toString())) {
 				// found matching info - no need for user intervention
@@ -128,11 +126,10 @@ public class QuotePreviewActivity extends Activity {
 		// ask for user to match
 		if (!foundMatch) {
 			QustomDialogBuilder qustomDialogBuilder = new QustomDialogBuilder(this)
-					.setTitle("Pick the currect book details")
-					.setTitleColor(Configuration.getInstance().getMainColor())
+					.setTitle("Pick the currect book details").setTitleColor(Configuration.getInstance().getMainColor())
 					.setDividerColor(Configuration.getInstance().getSecondaryColor())
 					.setMessageBGColor(Configuration.getInstance().getMainColor());
-			
+
 			qustomDialogBuilder.setItems(books, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
@@ -141,18 +138,17 @@ public class QuotePreviewActivity extends Activity {
 				}
 			});
 			qustomDialogBuilder.show();
-//			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//			builder.setTitle("Pick the currect book details");
-//			builder.setItems(books, new DialogInterface.OnClickListener() {
-//				@Override
-//				public void onClick(DialogInterface dialog, int which) {
-//					choosenVolume = which;
-//				}
-//			});
-//			builder.show();
+			// AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			// builder.setTitle("Pick the currect book details");
+			// builder.setItems(books, new DialogInterface.OnClickListener() {
+			// @Override
+			// public void onClick(DialogInterface dialog, int which) {
+			// choosenVolume = which;
+			// }
+			// });
+			// builder.show();
 		}
 
-		
 	}
 
 	private void updateVolume(BookInfoResponse bookInfoResponse) {
@@ -176,13 +172,14 @@ public class QuotePreviewActivity extends Activity {
 
 	public void onUpdateButtonClicked(View v) {
 		// Long isbnNum = Long.parseLong(isbnEditText.getText().toString());
-//		new GetBookInfoService(this, -1, titleEditText.getText().toString(), authorEditText.getText().toString().split(",")[0],
-//				bookDetailsRequestListener).execute();
+		// new GetBookInfoService(this, -1, titleEditText.getText().toString(),
+		// authorEditText.getText().toString().split(",")[0],
+		// bookDetailsRequestListener).execute();
 	}
 
 	public void onSubmitButtonClicked(View v) {
-		new GetBookInfoService(this, titleEditText.getText().toString(), authorEditText.getText().toString().split(",")[0],
-				bookDetailsRequestListener).execute();
+		new GetBookInfoService(this, titleEditText.getText().toString(),
+				authorEditText.getText().toString().split(",")[0], bookDetailsRequestListener).execute();
 	}
 
 	private void submitQuote() {
@@ -194,7 +191,7 @@ public class QuotePreviewActivity extends Activity {
 		volumeInfo.setAuthors(authorEditText.getText().toString().split(","));
 		volumeInfo.setTitle(titleEditText.getText().toString());
 		// TODO fix page in server
-//		pageEditText.getText().toString()
+		// pageEditText.getText().toString()
 		volumeInfo.setPageCount("0");
 
 		// Create new Quote and update

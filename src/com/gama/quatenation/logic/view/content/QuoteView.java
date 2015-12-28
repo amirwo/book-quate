@@ -1,10 +1,13 @@
 package com.gama.quatenation.logic.view.content;
 
+import com.gama.quatenation.QuoteViewActivity;
 import com.gama.quatenation.R;
 import com.gama.quatenation.logic.Configuration;
-import com.gama.quatenation.model.book.Quote;
+import com.gama.quatenation.model.quote.Quote;
+import com.gama.quatenation.utils.Constants;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +20,7 @@ public class QuoteView extends LinearLayout {
 	private ViewState state;
 	private String fullQuote, previewQuote;
 
-	public QuoteView(Context context, Quote quote) {
+	public QuoteView(final Context context,final Quote quote) {
 		super(context);
 		state = ViewState.PREVIEW;
 		fullQuote = quote.getContent();
@@ -37,26 +40,29 @@ public class QuoteView extends LinearLayout {
 			
 			@Override
 			public void onClick(View v) {
-				switch(state) {
-				case PREVIEW:
-					// expand text
-					((TextView) v).setText(fullQuote);
-					// add "i" ?
-					state = ViewState.EXPANDED;
-					break;
-				case EXPANDED:
-					// close
-					((TextView) v).setText(previewQuote);
-					state = ViewState.PREVIEW;
-					break;
-				}
-				
+				Intent intent = new Intent(context, QuoteViewActivity.class);
+				intent.putExtra(Constants.KEY_QUOTE, quote);
+				context.startActivity(intent);
+//				switch(state) {
+//				case PREVIEW:
+//					// expand text
+//					((TextView) v).setText(fullQuote);
+//					// add "i" ?
+//					state = ViewState.EXPANDED;
+//					break;
+//				case EXPANDED:
+//					// close
+//					((TextView) v).setText(previewQuote);
+//					state = ViewState.PREVIEW;
+//					break;
+//				}
+//				
 			}
 		});
 
 	    TextView quoteInfo = (TextView) getChildAt(1);
 	    quoteInfo.setText(quote.getVolumeInfo().getTitle() + " ," + quote.getVolumeInfo().getAuthors()[0]);
-	    quoteInfo.setTextColor(Configuration.getInstance().getMainColor());
+	    quoteInfo.setTextColor(getResources().getColor(R.color.book_details_color));
 	    
 	}
 	

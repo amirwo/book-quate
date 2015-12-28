@@ -1,35 +1,37 @@
 package com.gama.quatenation.model.book;
 
+import java.io.Serializable;
+
 // Represent isbn info class
-public class IndustryIdentifiers
-{
-    private String type;
+public class IndustryIdentifiers implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
-    private String identifier;
+	private String type;
 
-    public String getType ()
-    {
-        return type;
-    }
+	private String identifier;
 
-    public void setType (String type)
-    {
-        this.type = type;
-    }
+	public String getType() {
+		return type;
+	}
 
-    public String getIdentifier ()
-    {
-        return identifier;
-    }
+	public void setType(String type) {
+		this.type = type;
+	}
 
-    public void setIdentifier (String identifier)
-    {
-        this.identifier = identifier;
-    }
+	public String getIdentifier() {
+		return identifier;
+	}
 
-    @Override
-    public String toString()
-    {
-        return "IndustryIdentifiers [type = "+type+", identifier = "+identifier+"]";
-    }
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
+	}
+
+	@Override
+	public String toString() {
+		return "IndustryIdentifiers [type = " + type + ", identifier = " + identifier + "]";
+	}
 }

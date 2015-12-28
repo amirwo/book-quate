@@ -10,5 +10,6 @@
     <string name="title_activity_public">PublicActivity</string>
     <string name="title_activity_crop">CropActivity</string>
     <string name="title_activity_croppiing">CroppiingActivity</string>
+    <string name="title_activity_quote_view">QuoteViewActivity</string>
 
 </resources>

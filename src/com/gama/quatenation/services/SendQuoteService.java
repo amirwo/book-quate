@@ -1,9 +1,9 @@
 package com.gama.quatenation.services;
 
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 
 import com.gama.quatenation.logic.Configuration;
-import com.gama.quatenation.model.book.Quote;
+import com.gama.quatenation.model.quote.Quote;
 import com.gama.quatenation.model.quote.UserQuotesWrapper;
 import com.gama.quatenation.utils.Constants;
 import com.gama.quatenation.utils.TransportHttp;
@@ -31,7 +31,7 @@ public class SendQuoteService extends BaseService{
 		try {
 			String json = new Gson().toJson(quote);
 			Log.v(TAG, "SendQuoteService jsonObject: " + json);
-			response = TransportHttp.sendPost(context, Constants.SERVICE_QUOTE_SEND_URL, json.getBytes(StandardCharsets.UTF_8));
+			response = TransportHttp.sendPost(context, Constants.SERVICE_QUOTE_SEND_URL, json.getBytes(Charset.forName("UTF-8")));
 		} catch (Exception e) {
 			Log.e(TAG, "Unable to handle SendQuoteService command!!!!", e);
 			errorMessage = e.getMessage();

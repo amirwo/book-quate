@@ -1,6 +1,13 @@
 package com.gama.quatenation.model.book;
 
-public class VolumeInfo {
+import java.io.Serializable;
+
+public class VolumeInfo implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private String pageCount;
 
 	private String[] authors;

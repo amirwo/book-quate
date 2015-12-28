@@ -27,7 +27,6 @@ import android.widget.ImageView;
 
 
 public class CropImageView extends ImageView {
-    private static final String TAG = CropImageView.class.getSimpleName();
 
     // Constants ///////////////////////////////////////////////////////////////////////////////////
 

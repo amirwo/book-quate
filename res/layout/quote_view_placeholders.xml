@@ -19,6 +19,6 @@
         android:paddingBottom="20dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:textSize="12dp" />
+        android:textSize="14dp" />
      
 </merge> 

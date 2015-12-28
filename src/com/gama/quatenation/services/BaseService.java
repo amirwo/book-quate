@@ -8,6 +8,7 @@ import android.os.Looper;
 public abstract class BaseService{
 
 	final protected Context context;
+	protected int priority = android.os.Process.THREAD_PRIORITY_BACKGROUND;
 	
 	protected String errorMessage = null;
 	
@@ -15,11 +16,16 @@ public abstract class BaseService{
 		this.context = context;
 	}
 	
+	public BaseService(Context context, int customPriority) {
+		this.context = context;
+		this.priority = customPriority;
+	}
+	
 	public void execute() {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
+				android.os.Process.setThreadPriority(priority);
 				final Boolean result = doInBackground();
 				new Handler(Looper.getMainLooper()).post(new Runnable() {
 					@Override

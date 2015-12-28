@@ -26,4 +26,8 @@ public class Constants {
 	// Error code
 	public static final int ERROR_CODE_UNKNOWN = 0;
 	public static final String ERROR_GETTING_ADVERTISING_ID = "unknown_advertising_id";
+	
+	// Intent constants
+	
+	public static final String KEY_QUOTE = "quote_key";
 }

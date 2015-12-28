@@ -3,4 +3,9 @@
     <color name="tab_background_color">#2A2B26</color>
     <color name="logo_green">#46D200</color>
     <color name="inactive_tab">#9B9C96</color>
+    <color name="main_color">#F2B965</color>
+    <color name="secondary_color">#CCD5A5</color>
+    <color name="book_details_color">#808000</color>
+     <color name="secondary_background_color">#ADD8E6</color>
+    
 </resources>

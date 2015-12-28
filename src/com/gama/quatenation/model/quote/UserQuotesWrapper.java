@@ -3,8 +3,6 @@ package com.gama.quatenation.model.quote;
 import java.io.Serializable;
 import java.util.List;
 
-import com.gama.quatenation.model.book.Quote;
-
 public class UserQuotesWrapper implements Serializable {
 	
 	/**
