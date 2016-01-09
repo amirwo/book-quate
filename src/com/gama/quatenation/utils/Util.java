@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import com.gama.quatenation.logic.Configuration;
@@ -69,7 +70,7 @@ public class Util {
 	    editor.commit();
 	}
 	
-	public static List<Quote> getSavedQuotes(String key, SharedPreferences prefs) {
+	public static Collection<Quote> getSavedQuotes(String key, SharedPreferences prefs) {
     	UserQuotesWrapper wrapper = new Gson().fromJson(prefs.getString(key, null),UserQuotesWrapper.class );
     	if (wrapper!=null) {
     		return wrapper.getUserQuotes();

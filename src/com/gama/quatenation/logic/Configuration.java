@@ -3,6 +3,8 @@ package com.gama.quatenation.logic;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 import com.gama.quatenation.logic.view.tabs.TabPlacement;
@@ -25,6 +27,7 @@ public class Configuration {
     private int secondaryColor = Color.rgb(204, 213, 165);
     private int mainColor	   = Color.rgb(242, 185, 101);
     private List<Quote> userQuoteList;
+    private HashMap<String, Quote> usersIdToLikedQuote;
     private String[] ocrLanguages = new String[]{"eng", "heb"};
     private String selectedLanguage = "eng";
     private File pathToPicture;
@@ -182,6 +185,27 @@ public class Configuration {
 	public File getPathToPicture() {
 		return pathToPicture;
 	}
+
+	public void addToUserLikedList(Quote q) {
+		getUserLikedList().put(q.getId(), q);
+	}
+	
+	public void removeFromUserLikedList(Quote q) {
+		getUserLikedList().remove(q.getId());
+	}
+
+	public HashMap<String, Quote> getUserLikedList() {
+		return usersIdToLikedQuote;
+	}
+
+	public void setUserLikedList(Collection<Quote> collection) {
+		HashMap<String, Quote> map = new HashMap<String, Quote>();
+		for (Quote q: collection) {
+			map.put(q.getId(), q);
+		}
+		this.usersIdToLikedQuote = map;
+	}
+
 
 
 }

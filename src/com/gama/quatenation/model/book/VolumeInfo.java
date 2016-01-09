@@ -14,9 +14,9 @@ public class VolumeInfo implements Serializable {
 
 	private String title;
 
-	private String language;
+	private String language = "";
 
-	private String publishedDate;
+	private String publishedDate = "";
 
 	private IndustryIdentifiers[] industryIdentifiers;
 

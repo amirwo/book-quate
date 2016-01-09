@@ -1,6 +1,7 @@
 package com.gama.quatenation.logic.view.content;
 
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.gama.quatenation.R;
 import com.gama.quatenation.logic.Configuration;
@@ -13,10 +14,12 @@ import com.gama.quatenation.model.quote.Quote;
 import com.gama.quatenation.model.quote.QuoteRequest;
 import com.gama.quatenation.model.quote.QuotesResponse;
 import com.gama.quatenation.services.GetBookInfoService;
+import com.gama.quatenation.services.GetQuoteFeedService;
 import com.gama.quatenation.services.GetQuotesService;
 import com.gama.quatenation.services.GetTextFromBitmapService;
 import com.gama.quatenation.services.RequestListener;
 import com.gama.quatenation.services.SendQuoteService;
+import com.gama.quatenation.utils.BitmapUtils;
 import com.gama.quatenation.utils.Util;
 import com.gama.quatenation.utils.ui.CropImageView;
 
@@ -65,7 +68,8 @@ public class ActivityFragment extends Fragment {
 	private static final int QUOTE_PREV_ACTIVITY = 10;
 	private static final int QUOTE_FEED_ACTIVITY = 1;
 	private static final int SEARCH_QUOTE_ACTIVITY = 2;
-	private static final String TAG = "AMIRActivityFragment";
+	private static final int FAVORITES_ACTIVITY = 3;
+	private static final String TAG = "ActivityFragment";
 
 	// Cropping activity instances
 	private CropImageView cropImageView;
@@ -94,7 +98,7 @@ public class ActivityFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 		submitCompleteDialog = new AlertDialog.Builder(this.getContext());
-		submitCompleteDialog.setTitle("Quote submnitted successfuly!");
+		submitCompleteDialog.setTitle("Quote submitted successfuly!");
 		
 		View rootView = inflater.inflate(R.layout.main_fragement, container, false);
 
@@ -121,9 +125,26 @@ public class ActivityFragment extends Fragment {
 			Log.v(TAG, "init QUOTE_FEED_ACTIVITY");
 			final LinearLayout ll = (LinearLayout) rootView.findViewById(R.id.llFeedView);
 			ll.setVisibility(View.VISIBLE);
-			for (Quote q : Configuration.getInstance().getUserQuoteList()) {
-				ll.addView(new QuoteView(context, q));
-			}
+			new GetQuoteFeedService(context, 0, true, new RequestListener() {
+				
+				@Override
+				public void onRequestError(int errCode) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public <T> void onRequestComplete(T response) {
+					QuotesResponse quotesResponse = null;
+					if (response instanceof QuotesResponse) {
+						quotesResponse = (QuotesResponse) response;
+					}
+					for (Quote q : quotesResponse.getQuotes()) {
+						ll.addView(new QuoteView(context, q));
+					}
+				}
+			}).execute();
+
 			break;
 		case QUOTE_PREV_ACTIVITY:
 			Log.v(TAG, "init QUOTE_PREV_ACTIVITY");
@@ -152,7 +173,12 @@ public class ActivityFragment extends Fragment {
 						// update book details if needed
 						BookInfoResponse bookInfoResponse = BookInfoResponse.class.cast(response);
 						if (bookInfoResponse.getItems() != null) {
+							Log.i(TAG, "Got some non null response from google API, num of items " + bookInfoResponse.getTotalItems());
 							updateBookInfoFields(bookInfoResponse);
+						} else {
+							Log.i(TAG, "Got no response from google book API - sending quote anyway");
+							submitQuote();
+							onPreviewActivityFinish();
 						}
 						
 						
@@ -223,37 +249,59 @@ public class ActivityFragment extends Fragment {
 					submitSearchClicked(req, searchQuotesRequestListener);
 				}
 			});
-//		    "ID" : [],
-//		    "userID" : "quotenationAlon",
-//		    "Title" : "",
-//		    "Author" : "",
-//		    "ISBN10" : "",
-//		    "ISBN13" : "",
-//		    "OrderBy" : "added",
-//		    "Direction" : "DESC"
+			break;
+		case FAVORITES_ACTIVITY: 
+			Log.v(TAG, "init FAVORITES_ACTIVITY");
+			final LinearLayout llFavorites = (LinearLayout) rootView.findViewById(R.id.llFavoritesView);
+			llFavorites.setVisibility(View.VISIBLE);
+			llFavorites.removeAllViews();
+			// First put all the liked quotes
+			Set<String> currentIds = new HashSet<String>();
+			for (Quote q : Configuration.getInstance().getUserLikedList().values()) {
+				llFavorites.addView(new QuoteView(context, q));
+				currentIds.add(q.getId());
+			}
+			
+			// add all private quotes 
+			for (Quote q : Configuration.getInstance().getUserQuoteList()) {
+				// dont add if already exists from favorites
+				if (currentIds.contains(q.getId())) {
+					continue;
+				}
+				llFavorites.addView(new QuoteView(context, q));
+			}
+			
+			// Old method - updated list via server response
+//			new GetFavoritesService(context, false, new RequestListener() {
+//				
+//				@Override
+//				public void onRequestError(int errCode) {
+//					// TODO Auto-generated method stub
+//					
+//				}
+//				
+//				@Override
+//				public <T> void onRequestComplete(T response) {
+//					QuotesResponse quotesResponse = null;
+//					if (response instanceof QuotesResponse) {
+//						quotesResponse = (QuotesResponse) response;
+//					}
+//					for (Quote q : quotesResponse.getQuotes()) {
+//						llFavorites.addView(new QuoteView(context, q));
+//					}
+//				}
+//			}).execute();
 		}
-	}
-
-	private void SetAllActivityLayoutsToGone(View rootView) {
-		RelativeLayout relCrop = (RelativeLayout) rootView.findViewById(R.id.quotePreviewLayout);
-		relCrop.setVisibility(View.GONE);
-		LinearLayout ll = (LinearLayout) rootView.findViewById(R.id.llFeedView);
-		ll.setVisibility(View.GONE);
-		RelativeLayout croppingLayout = (RelativeLayout) rootView.findViewById(R.id.croppingRelativeLayout);
-		croppingLayout.setVisibility(View.GONE);
 	}
 
 	private void initCroppingActivity(Context context, View rootView) {
 		RelativeLayout croppingLayout = (RelativeLayout) rootView.findViewById(R.id.croppingRelativeLayout);
 		croppingLayout.setVisibility(View.VISIBLE);
 		croppingLayout.setBackgroundColor(Configuration.getInstance().getSecondaryColor());
-//		if (cropImageView == null) {
 		cropImageView = (CropImageView) croppingLayout.getChildAt(0);
-//			cropImageView = (CropImageView) croppingLayout.findViewById(R.id.cropImageView);
-//		}
-			
 		cropImageView.setId(CROPPING_IMAGE_ID);
 		cropImageView.setBackgroundColor(Configuration.getInstance().getSecondaryColor());
+		cropImageView.setImageBitmap(null);;
 		initButtons(context, croppingLayout, CROPPING_IMAGE_ID);
 	}
 
@@ -289,7 +337,9 @@ public class ActivityFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				cropImageView.rotateImage(CropImageView.RotateDegrees.ROTATE_90D);
+				if (cropImageView.getImageBitmap() != null) {
+					cropImageView.rotateImage(CropImageView.RotateDegrees.ROTATE_90D);
+				}
 			}
 		});
 
@@ -299,7 +349,9 @@ public class ActivityFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				// Get cropped image, and show result.
-				cropImageView.setImageBitmap(cropImageView.getCroppedBitmap());
+				if (cropImageView.getImageBitmap() != null) {
+					cropImageView.setImageBitmap(cropImageView.getCroppedBitmap());
+				}
 			}
 		});
 
@@ -315,19 +367,18 @@ public class ActivityFragment extends Fragment {
 					@Override
 					public void onRequestError(int errCode) {
 						// TODO Auto-generated method stub
-
 					}
 
 					@Override
 					public <T> void onRequestComplete(T response) {
+						processedText = "Error while processing photo to text";
 						if (dialog.isShowing()) {
 							dialog.dismiss();
 						}
 						if (response instanceof String) {
 							processedText = (String) response;
-							startPreviewActivity();
 						}
-
+						startPreviewActivity();
 					}
 				});
 				getTextService.execute();
@@ -386,12 +437,6 @@ public class ActivityFragment extends Fragment {
 		Log.v(TAG, "starting preview layout");
 		View rootView = this.getActivity().findViewById(R.id.mainRelativeLayout);
 		initMainLayout(this.getContext(), rootView, QUOTE_PREV_ACTIVITY);
-		// RelativeLayout l = (RelativeLayout) quotePreviewLayout
-		// Intent quotePreview = new Intent(this.getContext(),
-		// QuotePreviewActivity.class);
-		// quotePreview.putExtra(Constants.KEY_QUOTE_CONTENT,
-		// utf8TextFromProcessedBitmap);
-		// startActivity(quotePreview);
 
 	}
 
@@ -401,12 +446,13 @@ public class ActivityFragment extends Fragment {
 		case IMAGE_REQUEST_CODE:
 			if (requestCode == IMAGE_REQUEST_CODE) {
 				if (resultCode == Activity.RESULT_OK) {
-					// This area needs work and optimization
 					BitmapFactory.Options options = new BitmapFactory.Options();
 					options.inSampleSize = 1;
 					Bitmap bitmap = BitmapFactory
 							.decodeFile(Configuration.getInstance().getPathToPicture().getAbsolutePath(), options);
 					cropImageView.setImageBitmap(bitmap);
+					// make photo process buttons available
+					
 				}
 			}
 		}
@@ -414,12 +460,15 @@ public class ActivityFragment extends Fragment {
 
 	protected Bitmap processPhoto() {
 		Bitmap bitmap = cropImageView.getCroppedBitmap();
+		if (bitmap == null) {
+			bitmap = BitmapUtils.getTextImage("no photo taken", 480, 640);
+		}
 		bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
 		return bitmap;
 	}
 
 	////////////////////////////
-	// QQuote Preview methods //
+	// Quote Preview methods //
 	////////////////////////////
 
 	public void updateBookInfoFields(final BookInfoResponse bookInfoResponse) {
@@ -430,10 +479,12 @@ public class ActivityFragment extends Fragment {
 			String title = book.getVolumeInfo().getTitle();
 			String[] authors = book.getVolumeInfo().getAuthors();
 			String authorsStr = "";
-			for (int i = 0; i < authors.length - 1; i++) {
-				authorsStr += authors[i] + ",";
+			if (authors != null) {
+				for (int i = 0; i < authors.length - 1; i++) {
+					authorsStr += authors[i] + ",";
+				}
+				authorsStr += authors[authors.length - 1];
 			}
-			authorsStr += authors[authors.length - 1];
 
 			if (title.equals(titleEditText.getText().toString())
 					&& authorsStr.equals(authorEditText.getText().toString())) {
@@ -448,7 +499,7 @@ public class ActivityFragment extends Fragment {
 		if (!foundMatch) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
 			builder.setTitle("Pick the currect book details");
-			builder.setCancelable(false);
+			builder.setCancelable(true);
 			builder.setItems(books, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
@@ -475,32 +526,45 @@ public class ActivityFragment extends Fragment {
 		}
 		authorsStr += authors[authors.length - 1];
 		IndustryIdentifiers[] industryIdentifiers = volumeInfo.getIndustryIdentifiers();
-		if (industryIdentifiers != null) {
-			for (IndustryIdentifiers identifier : industryIdentifiers) {
-				identifier.setIdentifier("1111111111");
-			}
-		}
-		volumeInfo.setIndustryIdentifiers(industryIdentifiers);
+		volumeInfo.setIndustryIdentifiers(getEmptyIdentifiers(industryIdentifiers));
 		((TextView) authorEditText).setText(authorsStr);
 		((TextView) titleEditText).setText(volumeInfo.getTitle());
 	}
 
+	private IndustryIdentifiers[] getEmptyIdentifiers(IndustryIdentifiers[] industryIdentifiers) {
+		if (industryIdentifiers != null) {
+			for (IndustryIdentifiers identifier : industryIdentifiers) {
+				identifier.setIdentifier("1111111111");
+			}
+		} else {
+			IndustryIdentifiers isbn10 = new IndustryIdentifiers();
+			isbn10.setType("ISBN_10");
+			isbn10.setIdentifier("0000000000");
+			IndustryIdentifiers isbn13 = new IndustryIdentifiers();
+			isbn13.setType("ISBN_13");
+			isbn13.setIdentifier("0000000000000");
+			IndustryIdentifiers[] identifiers = {isbn10, isbn13};
+			industryIdentifiers = identifiers;
+		}
+		return industryIdentifiers;
+		
+	}
+
 	private void submitQuote() {
+		Log.i(TAG, "trying to submit quote with author:" + authorEditText.getText().toString() + ". title:" + titleEditText.getText().toString());
 		// volume info has been set manually
 		if (volumeInfo == null) {
 			volumeInfo = new VolumeInfo();
 		}
+		IndustryIdentifiers[] industryIdentifiers = volumeInfo.getIndustryIdentifiers();
+		volumeInfo.setIndustryIdentifiers(getEmptyIdentifiers(industryIdentifiers));
 		// TODO: support more than 1 author in editable mode
 		volumeInfo.setAuthors(authorEditText.getText().toString().split(","));
 		volumeInfo.setTitle(titleEditText.getText().toString());
-		// TODO fix page in server
-		// pageEditText.getText().toString()
 		volumeInfo.setPageCount("0");
 
 		// Create new Quote and update
 		Quote quote = new Quote();
-		// TODO: move advertisingId to MetaData class for this app
-		// should run not on main thread to get advId
 
 		quote.setContent(quoteEditText.getText().toString());
 		quote.setVolumeInfo(volumeInfo);

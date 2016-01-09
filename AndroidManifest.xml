@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.gama.quatenation"
-    android:versionCode="1"
+    android:versionCode="2"
     android:versionName="1.0" >
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -13,11 +13,11 @@
 
     <uses-sdk
         android:minSdkVersion="15"
-        android:targetSdkVersion="21" />
+        android:targetSdkVersion="23" />
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/tabs_book_active2"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <provider
@@ -38,6 +38,7 @@
 
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="portrait"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -46,31 +47,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".QuotePreviewActivity"
-            android:label="@string/title_activity_quote_preview" >
-            <intent-filter>
-                <action android:name="com.gama.quatenation.OnCompleteTessApiBroadcastListener" >
-                </action>
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".ArchiveActivity"
-            android:label="@string/title_activity_archive" >
-        </activity>
-        <activity
-            android:name=".PrivateActivity"
-            android:label="@string/title_activity_private" >
-        </activity>
-        <activity
-            android:name=".PublicActivity"
-            android:label="@string/title_activity_public" >
-        </activity>
-        <activity
-            android:name=".CroppingActivity"
-            android:label="@string/title_activity_croppiing" >
-        </activity>
-        <activity
             android:name=".QuoteViewActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_quote_view" >
         </activity>
     </application>

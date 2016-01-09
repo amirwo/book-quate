@@ -31,7 +31,7 @@ public class GetQuotesService extends BaseService {
 		String response;
 		try {
 			response = TransportHttp.sendPost(context, Constants.SERVICE_QUOTES_POST_URL,
-					new Gson().toJson(quoteRequest).getBytes(Charset.forName("UTF-8")));
+					new Gson().toJson(quoteRequest).getBytes(Charset.defaultCharset()));
 			
 		} catch (Exception e) {
 			Log.e(TAG, "Unable to handle SendQuoteService command!!!!", e);

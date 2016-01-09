@@ -1,14 +1,11 @@
 package com.gama.quatenation;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.gama.quatenation.logic.Configuration;
 import com.gama.quatenation.model.quote.Quote;
-import com.gama.quatenation.model.quote.QuoteRequest;
-import com.gama.quatenation.model.quote.QuotesResponse;
-import com.gama.quatenation.services.GetQuotesService;
-import com.gama.quatenation.services.RequestListener;
 import com.gama.quatenation.utils.AdvertisingIdFactory;
 import com.gama.quatenation.utils.Util;
 
@@ -38,11 +35,17 @@ public class MainActivity extends FragmentActivity {
 			setUserAdvertisingId();
 			
 			// restore quotes from shared prefs 
-			List<Quote> savedQuotes = Util.getSavedQuotes("QUOTESLIST", getApplicationContext().getSharedPreferences("QUOTE_SHARED_PREFS", Context.MODE_PRIVATE));
+			List<Quote> savedQuotes = (List<Quote>)Util.getSavedQuotes("QUOTESLIST", getApplicationContext().getSharedPreferences("QUOTE_SHARED_PREFS", Context.MODE_PRIVATE));
 			if (savedQuotes == null) {
 				savedQuotes = new ArrayList<Quote>();
 			}
 			Configuration.getInstance().setUserQuoteList(savedQuotes);
+			// restore liked quotes from shared prefs
+			Collection<Quote> savedLikedQuotes = Util.getSavedQuotes("LIKED_QUOTESLIST", getApplicationContext().getSharedPreferences("QUOTE_SHARED_PREFS", Context.MODE_PRIVATE));
+			if (savedLikedQuotes == null) {
+				savedLikedQuotes = new ArrayList<Quote>();
+			}
+			Configuration.getInstance().setUserLikedList(savedLikedQuotes);
 		}
 
 		if (savedInstanceState == null){

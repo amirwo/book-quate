@@ -29,6 +29,18 @@ public class TransportHttp {
 		T object = new Gson().fromJson(response.toString(), responseType);
 		return object;
 	}
+	
+	public static String transport(Context context, String fullUrl, String request)
+			throws Exception {
+		String resStr = "none";
+		StringBuilder response = new StringBuilder();
+		TransportHttp.sendGet(context, fullUrl, request, response, MAX_RETRY_COUNT, 0);
+		if (response != null) {
+			resStr = response.toString();
+		}
+		return resStr;
+	}
+	
 
 	private static void sendGet(Context context, String fullUrl, String request, StringBuilder sb, int maxRetryCount,
 			long retryInterval) throws Exception {
@@ -89,6 +101,7 @@ public class TransportHttp {
 			if (statusCode != HttpURLConnection.HTTP_OK) {
 				return null;
 			}
+			
 			is = connection.getInputStream();
 			if (is != null) {
 				Writer writer = new StringWriter();
@@ -200,6 +213,7 @@ public class TransportHttp {
 			connection.setDoOutput(true);
 			connection.setFixedLengthStreamingMode(bytes.length);
 			connection.setRequestProperty("Content-Type", "application/json");
+			connection.setRequestProperty("charset","utf-8");
 		} else {
 			connection.setRequestMethod("GET");
 		}

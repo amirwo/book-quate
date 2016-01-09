@@ -1,12 +1,13 @@
 package com.gama.quatenation;
 
+import com.gama.quatenation.logic.Configuration;
 import com.gama.quatenation.model.quote.Quote;
+import com.gama.quatenation.services.SendLikeQuoteService;
 import com.gama.quatenation.utils.Constants;
 import com.gama.quatenation.utils.Util;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.media.session.MediaSessionCompat.OnActiveChangeListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -20,6 +21,7 @@ public class QuoteViewActivity extends Activity {
 	private RelativeLayout quoteLayout;
 	private RelativeLayout likeTab;
 	private Quote quote;
+	private static final String TAG = "QuoteViewActivity";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,13 @@ public class QuoteViewActivity extends Activity {
 			}
 		};
 		
+		OnClickListener searchListener = new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+			}
+		};
 		
 		RelativeLayout.LayoutParams infoParams = new RelativeLayout.LayoutParams(
 				RelativeLayout.LayoutParams.WRAP_CONTENT, 
@@ -65,9 +74,12 @@ public class QuoteViewActivity extends Activity {
 				RelativeLayout.LayoutParams.WRAP_CONTENT);
 		likeParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 		
-		
+		String likeImageUrl =  "tabs_favorites_inactive.png";
+		if (quote.isLikedByUser()) {
+			likeImageUrl = "tabs_favorites_active.png";
+		}
 		RelativeLayout infoTab = Util.createTabView(this, infoListener, " info ", "info_photo.png", 500, false);
-		likeTab = Util.createTabView(this, likeListener, " like ", "tabs_favorites_inactive.png", 501, false);
+		likeTab = Util.createTabView(this, likeListener, " like ", likeImageUrl, 501, false);
 		RelativeLayout searchTab = Util.createTabView(this, infoListener, " search ", "tabs_search_inactive.png", 502, false);
 		tabsLayout.addView(infoTab, infoParams);
 		tabsLayout.addView(searchTab, searchParams);
@@ -85,6 +97,7 @@ public class QuoteViewActivity extends Activity {
 		like.setImageBitmap(Util.getImageBitmap(this, imageUrl));
 		
 		// add like service and shoot it
+		new SendLikeQuoteService(this, quote, Configuration.getInstance().getUserAdvertisingId(), !likedByUser).execute();
 	}
 	
 	private void openExtendedInfo() {

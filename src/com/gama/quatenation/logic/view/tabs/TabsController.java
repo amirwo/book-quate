@@ -12,7 +12,7 @@ import android.widget.HorizontalScrollView;
 
 public class TabsController {
 	
-	private static String TAG = "AMIRTabsController";
+	private static String TAG = "TabsController";
 	
 	// ===== SINGLETON =========
 	// Private constructor prevents instantiation from other classes

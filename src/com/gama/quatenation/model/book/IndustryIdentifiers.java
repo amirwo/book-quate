@@ -10,7 +10,7 @@ public class IndustryIdentifiers implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private String type;
+	private String type = "";
 
 	private String identifier;
 

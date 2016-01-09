@@ -92,4 +92,4 @@ public class Quote implements Serializable {
 	public void setLikedByUser(boolean likedByUser) {
 		this.likedByUser = likedByUser;
 	}
-}
+} 

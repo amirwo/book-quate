@@ -9,7 +9,7 @@ import android.util.Log;
 public class ActivitiesPagerAdapter extends FragmentPagerAdapter {
 	
 	private int count; 
-	private static String TAG = "AMIRActivitiesPagerAdapter";
+	private static String TAG = "ActivitiesPagerAdapter";
 	
 	public ActivitiesPagerAdapter(FragmentManager fm, int count) {
 		super(fm);

@@ -17,12 +17,10 @@ import android.widget.TextView;
 public class QuoteView extends LinearLayout {
 
 	private static final int MAX_CHAR_PER_QUOTE_PREVIEW = 100;
-	private ViewState state;
 	private String fullQuote, previewQuote;
 
 	public QuoteView(final Context context,final Quote quote) {
 		super(context);
-		state = ViewState.PREVIEW;
 		fullQuote = quote.getContent();
 		
 		previewQuote = fullQuote.substring(0, 
@@ -42,21 +40,7 @@ public class QuoteView extends LinearLayout {
 			public void onClick(View v) {
 				Intent intent = new Intent(context, QuoteViewActivity.class);
 				intent.putExtra(Constants.KEY_QUOTE, quote);
-				context.startActivity(intent);
-//				switch(state) {
-//				case PREVIEW:
-//					// expand text
-//					((TextView) v).setText(fullQuote);
-//					// add "i" ?
-//					state = ViewState.EXPANDED;
-//					break;
-//				case EXPANDED:
-//					// close
-//					((TextView) v).setText(previewQuote);
-//					state = ViewState.PREVIEW;
-//					break;
-//				}
-//				
+				context.startActivity(intent);		
 			}
 		});
 
@@ -66,30 +50,5 @@ public class QuoteView extends LinearLayout {
 	    
 	}
 	
-	public enum ViewState {
-		PREVIEW(1),
-		EXPANDED(2);
-
-		
-		private int index;
-		private ViewState(int index){
-			this.index = index;
-		}
-		
-		public int getIndex(){
-			return index;
-		}
-		
-		public static ViewState getByIndex(int index){
-			ViewState result = ViewState.PREVIEW;
-			ViewState types[] = values();
-			for (int i = 0; i < types.length; i++){
-				if (types[i].getIndex() == index){
-					result = types[i];
-				}
-			}
-			return result;
-		}
-	}
 	
 }
