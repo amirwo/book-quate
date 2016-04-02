@@ -23,17 +23,22 @@ import com.gama.quatenation.utils.BitmapUtils;
 import com.gama.quatenation.utils.Util;
 import com.gama.quatenation.utils.ui.CropImageView;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -49,6 +54,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ActivityFragment extends Fragment {
 
@@ -62,6 +68,8 @@ public class ActivityFragment extends Fragment {
 	// activity intents
 	private static final int IMAGE_REQUEST_CODE = 1;
 	private static final String CAPTURE_IMAGE_FILE_PROVIDER = "com.gama.quatenation.fileprovider";
+	protected static final int PERMISSION_REQUEST_CODE_CAMERA = 66;
+
 
 	// Activity codes
 	private static final int ADD_QUOTE_ACTIVITY = 0;
@@ -125,6 +133,7 @@ public class ActivityFragment extends Fragment {
 			Log.v(TAG, "init QUOTE_FEED_ACTIVITY");
 			final LinearLayout ll = (LinearLayout) rootView.findViewById(R.id.llFeedView);
 			ll.setVisibility(View.VISIBLE);
+
 			new GetQuoteFeedService(context, 0, true, new RequestListener() {
 				
 				@Override
@@ -326,8 +335,31 @@ public class ActivityFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				onTakePhotoClicked();
-
+			       if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+		                // if sdk is marshmallow
+		                if (ContextCompat.checkSelfPermission(getActivity(),
+		                        Manifest.permission.CAMERA)
+		                        != PackageManager.PERMISSION_GRANTED) {
+		                    // permission is not granted
+		                    if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+		                            Manifest.permission.CAMERA)) {
+		                        // if permissions explanation is needed
+		                        Toast.makeText(getActivity().getApplicationContext(),
+		                                "Camera permission allows us to access the camera." +
+		                                " Please allow in App Settings for additional " +
+		                                "functionality.",Toast.LENGTH_SHORT).show();
+		                    } else {
+		                        ActivityCompat.requestPermissions(getActivity(),
+		                                new String[]{Manifest.permission.CAMERA},
+		                                PERMISSION_REQUEST_CODE_CAMERA);
+		                    }
+		                    return; // permission is not yet granted
+		                } else {
+		                	onTakePhotoClicked();
+		                }
+		            } else {
+		            	onTakePhotoClicked();
+		            }
 			}
 		});
 
@@ -592,4 +624,19 @@ public class ActivityFragment extends Fragment {
 		initMainLayout(this.getContext(), rootView, ADD_QUOTE_ACTIVITY);
 	}
 
+	 @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+
+            case PERMISSION_REQUEST_CODE_CAMERA:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                	
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(),"Permission Denied," +
+                            " You cannot access the camera.",Toast.LENGTH_LONG).show();
+                }
+                break;
+        }
+    }
+	 
 }
